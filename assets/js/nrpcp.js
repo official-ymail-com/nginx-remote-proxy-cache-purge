@@ -1,3 +1,7 @@
+/**
+* @package nginx-remote-proxy-cache-purge
+*/
+
 jQuery(document).ready(function($) {
 	jQuery('#wp-admin-bar-nrpcp_purge_page a, #wp-admin-bar-nrpcp_purge_all a').click(function(event){
 		event.preventDefault();

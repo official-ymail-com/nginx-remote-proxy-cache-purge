@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Nginx Remote Proxy Cache Purge
-Description: Purge remote proxy cache
+Description: Purge remote Nginx proxy cache using http curl
 Version: 1.0
  */
  
