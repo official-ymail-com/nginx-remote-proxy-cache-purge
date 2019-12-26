@@ -103,6 +103,7 @@ class nrpcp_class{
 		if( isset($_POST['url']) && wp_http_validate_url($_POST['url']) ){
 			$url = $_POST['url'];
 		}
+		$url = apply_filters('nrpcp_url', $url);
 		$arr = wp_parse_url($url);
 		$url = $arr['scheme'] . '://' . $arr['host'] . '/' . self::$nrpcp_purge_path . '/' . $arr['path']; 
 		$res = self::curl_url($url);
