@@ -6,6 +6,8 @@
 class nrpcp_class{
 	
 	private static $initiated = false;
+	private static $nrpcp_secret = 'Nginx Remote Proxy Cache Purge Secrete';
+	private static $nrpcp_purge_path = 'purge';
 	
 	 /**
 	 * Init
@@ -21,6 +23,7 @@ class nrpcp_class{
 	 */
 	public static function init_hooks() {
 		self::$initiated = true;
+		self::get_option_values();
 		add_action( 'admin_bar_menu', array('nrpcp_class', 'admin_bar_menu'), 999);
 		add_action( 'wp_enqueue_scripts', array('nrpcp_class', 'wp_enqueue_scripts'), 11 );
 		add_action( 'wp_ajax_purge_cache_page', array('nrpcp_class', 'purge_cache_page') );
@@ -69,16 +72,16 @@ class nrpcp_class{
 	}
 	
 	
-	 /**
+	/**
 	 * Enqueue JS/CSS files
-	 */
+	*/
 	public static function wp_enqueue_scripts(){
 		if(is_admin_bar_showing()){
 			$current_url = home_url($_SERVER['REQUEST_URI']);
-			wp_register_script( 'nrpcp-js', URL_nrpcp_PLUGIN . '/assets/js/nrpcp.js', array('jquery'), VERSION_nrpcp_PLUGIN, $in_footer );
+			wp_register_script( 'nrpcp-js', URL_nrpcp_PLUGIN . '/assets/js/nrpcp.js', array('jquery'), VERSION_nrpcp_PLUGIN, 1 );
 			wp_localize_script( 'nrpcp-js', 'nrpcp_object', array(
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
-				'nonce'	=> wp_create_nonce( __( 'Nginx Remote Proxy Cache Purge', 'nrpcp' ) ),
+				'nonce'	=> wp_create_nonce( self::$nrpcp_secret, 'nrpcp' ),
 				'current_url' => $current_url,
 			));
 			
@@ -86,15 +89,60 @@ class nrpcp_class{
 		}
 	}
 	
-	 /**
+	/**
 	 * Purge page cache
-	 */
+	*/
 	public static function purge_cache_page( $admin_bar ) {
 		
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
-		check_ajax_referer( __( 'Nginx Remote Proxy Cache Purge', 'nrpcp' ) );
+		
+		check_ajax_referer( self::$nrpcp_secret, 'nonce', true );
+		
+		$url = '';
+		if( isset($_POST['current_url']) && wp_http_validate_url($_POST['current_url']) ){
+			$url = $_POST['current_url'];
+			//$url = 'https://roob.ltd/2019/12/19/hello-world/';
+		}
+		$arr = wp_parse_url($url);
+		$url = $arr['scheme'] . '://' . $arr['host'] . '/' . self::$nrpcp_purge_path . '/' . $arr['path']; 
+		$res = self::curl_url($url);
+		wp_die($res);
 	}
 	
+	/**
+	 * get option values
+	*/	
+	public static function get_option_values(){
+		if(defined('NRPCP_SECRET')){
+			self::$nrpcp_secret = NRPCP_SECRET;
+		}
+		if(defined('NRPCP_PURGE_PATH')){
+			self::$nrpcp_purge_path = NRPCP_PURGE_PATH;
+		}
+	}
+	
+	/**
+	 * curl URL
+	*/	
+	public static function curl_url($url){
+		$transport = new WP_Http_Curl();
+		$args = array(
+			'timeout' => '10', 
+			'redirection' => 1, 
+			'method' => 'HEAD',
+			'headers' => array(
+				'Cache-Control' => 'max-age=0',
+				'Sec-Fetch-User' => '?1',
+				'Accept-Encoding' => 'gzip, deflate, br',
+			)
+		);
+		$header = $transport->request( $url, $args );
+		$res = 0;
+		if( isset($header['response']['code']) && $header['response']['code'] == 200){
+			$res = 1;
+		}
+		return $res;
+	}
 }
