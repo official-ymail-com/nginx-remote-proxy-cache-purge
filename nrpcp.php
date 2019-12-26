@@ -12,3 +12,5 @@ define( 'URL_nrpcp_PLUGIN',  plugins_url('', __FILE__));
 
 require_once(PATH_nrpcp_PLUGIN . 'class/nrpcp.class.php');
 add_action( 'plugins_loaded', array( 'nrpcp_class', 'init' ) );
+require_once(PATH_nrpcp_PLUGIN . 'class/assets.class.php');
+add_action( 'plugins_loaded', array( 'nrpcp_assets_class', 'init' ) );
