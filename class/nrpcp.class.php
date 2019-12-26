@@ -1,7 +1,7 @@
 <?php
 /**
- * @package nginx-remote-proxy-cache-purge
- */
+* @package nginx-remote-proxy-cache-purge
+*/
  
 class nrpcp_class{
 	
@@ -9,18 +9,18 @@ class nrpcp_class{
 	private static $nrpcp_secret = 'Nginx Remote Proxy Cache Purge Secrete';
 	private static $nrpcp_purge_path = 'purge';
 	
-	 /**
-	 * Init
-	 */
+	/**
+	* Init
+	*/
 	public static function init() {
 		if ( ! self::$initiated ) {
 			self::init_hooks();
 		}
 	}
 	
-	 /**
-	 * add actions/filters
-	 */
+	/**
+	* add actions/filters
+	*/
 	public static function init_hooks() {
 		self::$initiated = true;
 		self::get_option_values();
@@ -29,9 +29,9 @@ class nrpcp_class{
 		add_action( 'wp_ajax_purge_cache_page', array('nrpcp_class', 'purge_cache_page') );
 	}
 	
-	 /**
-	 * Add items in WordPress admin bar
-	 */
+	/**
+	* Add items in WordPress admin bar
+	*/
 	public static function admin_bar_menu( $admin_bar ) {
 		
 		if ( is_admin() || ! current_user_can( 'manage_options' ) ) {
@@ -55,7 +55,7 @@ class nrpcp_class{
 				'meta' => [
 					'title' => __( 'Purge all cache', 'nrpcp' ), //This title will show on hover
 				]
-			) ,  */
+			) , */
 			array(
 				'id'    => 'nrpcp_purge_page',
 				'parent' => 'nrpcp_main',
@@ -73,7 +73,7 @@ class nrpcp_class{
 	
 	
 	/**
-	 * Enqueue JS/CSS files
+	* Enqueue JS/CSS files
 	*/
 	public static function wp_enqueue_scripts(){
 		if(!is_admin() && is_admin_bar_showing() && current_user_can( 'manage_options' )){
@@ -89,7 +89,7 @@ class nrpcp_class{
 	}
 	
 	/**
-	 * Purge page cache
+	* Purge page cache
 	*/
 	public static function purge_cache_page( $admin_bar ) {
 		
@@ -111,7 +111,7 @@ class nrpcp_class{
 	}
 	
 	/**
-	 * get option values
+	* get option values
 	*/	
 	public static function get_option_values(){
 		if(defined('NRPCP_SECRET')){
@@ -123,7 +123,7 @@ class nrpcp_class{
 	}
 	
 	/**
-	 * curl URL
+	* curl URL
 	*/	
 	public static function curl_url($url){
 		$transport = new WP_Http_Curl();
