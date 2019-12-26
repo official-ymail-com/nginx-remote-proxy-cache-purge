@@ -78,7 +78,7 @@ class nrpcp_class{
 	public static function wp_enqueue_scripts(){
 		if(!is_admin() && is_admin_bar_showing() && current_user_can( 'manage_options' )){
 			$current_url = home_url($_SERVER['REQUEST_URI']);
-			wp_register_script( 'nrpcp-js', URL_nrpcp_PLUGIN . '/assets/js/nrpcp.js', array('jquery'), VERSION_nrpcp_PLUGIN, 1 );
+			wp_register_script( 'nrpcp-js', URL_NRPCP_PLUGIN . '/assets/js/nrpcp.js', array('jquery'), VERSION_NRPCP_PLUGIN, 1 );
 			wp_localize_script( 'nrpcp-js', 'nrpcp_object', array(
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
 				'nonce'	=> wp_create_nonce( self::$nrpcp_secret, 'nrpcp' ),
