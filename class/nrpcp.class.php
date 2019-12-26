@@ -102,7 +102,7 @@ class nrpcp_class{
 		$url = '';
 		if( isset($_POST['url']) && wp_http_validate_url($_POST['url']) ){
 			$url = $_POST['url'];
-			$url = 'https://roob.ltd/2019/12/19/hello-world/';
+			//$url = 'https://roob.ltd/2019/12/19/hello-world/';
 		}
 		$arr = wp_parse_url($url);
 		$url = $arr['scheme'] . '://' . $arr['host'] . '/' . self::$nrpcp_purge_path . '/' . $arr['path']; 
