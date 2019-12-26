@@ -42,25 +42,25 @@ class nrpcp_class{
 				'id'    => 'nrpcp_main',
 				'parent' => null,
 				'title' => __('Purge Cache', 'nrpcp'), //you can use img tag with image link. it will show the image icon Instead of the title.
-				'href'  => admin_url('admin.php'),
+				'href'  => admin_url('/'),
 				'meta' => [
 					'title' => __( 'Nginx Remote Proxy Cache Purge', 'nrpcp' ), //This title will show on hover
 				]
 			),
-/* 			array(
+/*  			array(
 				'id'    => 'nrpcp_purge_all',
 				'parent' => 'nrpcp_main',
 				'title' => __('Purge All', 'nrpcp'), //you can use img tag with image link. it will show the image icon Instead of the title.
-				'href'  => admin_url('admin.php?page=custom-page'),
+				'href'  => home_url('/*'),
 				'meta' => [
 					'title' => __( 'Purge all cache', 'nrpcp' ), //This title will show on hover
 				]
-			) , */
+			) ,  */
 			array(
 				'id'    => 'nrpcp_purge_page',
 				'parent' => 'nrpcp_main',
-				'title' => __('Purge page', 'nrpcp'), //you can use img tag with image link. it will show the image icon Instead of the title.
-				'href'  => '#',
+				'title' => __('Purge page', 'nrpcp') . ' <span style="display:none" id="nrpcp_message">Done</span>', //you can use img tag with image link. it will show the image icon Instead of the title.
+				'href'  => home_url($_SERVER['REQUEST_URI']),
 				'meta' => [
 					'title' => __( 'Purge this page cache', 'nrpcp' ), //This title will show on hover
 				]
@@ -82,7 +82,6 @@ class nrpcp_class{
 			wp_localize_script( 'nrpcp-js', 'nrpcp_object', array(
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
 				'nonce'	=> wp_create_nonce( self::$nrpcp_secret, 'nrpcp' ),
-				'current_url' => $current_url,
 			));
 			
 			wp_enqueue_script( 'nrpcp-js' );
@@ -101,9 +100,9 @@ class nrpcp_class{
 		check_ajax_referer( self::$nrpcp_secret, 'nonce', true );
 		
 		$url = '';
-		if( isset($_POST['current_url']) && wp_http_validate_url($_POST['current_url']) ){
-			$url = $_POST['current_url'];
-			//$url = 'https://roob.ltd/2019/12/19/hello-world/';
+		if( isset($_POST['url']) && wp_http_validate_url($_POST['url']) ){
+			$url = $_POST['url'];
+			$url = 'https://roob.ltd/2019/12/19/hello-world/';
 		}
 		$arr = wp_parse_url($url);
 		$url = $arr['scheme'] . '://' . $arr['host'] . '/' . self::$nrpcp_purge_path . '/' . $arr['path']; 
