@@ -59,7 +59,7 @@ class nrpcp_class{
 			array(
 				'id'    => 'nrpcp_purge_page',
 				'parent' => 'nrpcp_main',
-				'title' => __('Purge page', 'nrpcp') . ' <span style="display:none" id="nrpcp_message">Done</span>', //you can use img tag with image link. it will show the image icon Instead of the title.
+				'title' => __('Purge page', 'nrpcp') . ' <span style="display:none" id="nrpcp_message">' . __('Done', 'nrpcp') . '</span>', //you can use img tag with image link. it will show the image icon Instead of the title.
 				'href'  => home_url($_SERVER['REQUEST_URI']),
 				'meta' => [
 					'title' => __( 'Purge this page cache', 'nrpcp' ), //This title will show on hover
@@ -102,7 +102,6 @@ class nrpcp_class{
 		$url = '';
 		if( isset($_POST['url']) && wp_http_validate_url($_POST['url']) ){
 			$url = $_POST['url'];
-			//$url = 'https://roob.ltd/2019/12/19/hello-world/';
 		}
 		$arr = wp_parse_url($url);
 		$url = $arr['scheme'] . '://' . $arr['host'] . '/' . self::$nrpcp_purge_path . '/' . $arr['path']; 
