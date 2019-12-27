@@ -42,20 +42,21 @@ class nrpcp_class{
 				'id'    => 'nrpcp_main',
 				'parent' => null,
 				'title' => __('Purge Cache', 'nrpcp'), //you can use img tag with image link. it will show the image icon Instead of the title.
-				'href'  => admin_url('/'),
+				//'href'  => admin_url('/'),
+				'href'  => '#',
 				'meta' => [
 					'title' => __( 'Nginx Remote Proxy Cache Purge', 'nrpcp' ), //This title will show on hover
 				]
 			),
-/*  			array(
+  			array(
 				'id'    => 'nrpcp_purge_all',
 				'parent' => 'nrpcp_main',
-				'title' => __('Purge All', 'nrpcp'), //you can use img tag with image link. it will show the image icon Instead of the title.
-				'href'  => home_url('/*'),
+				'title' => __('Purge Folder', 'nrpcp'), //you can use img tag with image link. it will show the image icon Instead of the title.
+				'href'  => home_url($_SERVER['REQUEST_URI'] . '*'),
 				'meta' => [
-					'title' => __( 'Purge all cache', 'nrpcp' ), //This title will show on hover
+					'title' => __( 'Purge all cache in this Folder', 'nrpcp' ), //This title will show on hover
 				]
-			) , */
+			) , 
 			array(
 				'id'    => 'nrpcp_purge_page',
 				'parent' => 'nrpcp_main',
