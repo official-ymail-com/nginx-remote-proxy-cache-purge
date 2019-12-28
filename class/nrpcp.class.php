@@ -104,11 +104,19 @@ class nrpcp_class{
 		if( isset($_POST['url']) && wp_http_validate_url($_POST['url']) ){
 			$url = $_POST['url'];
 		}
+		$res = self::purge_URL($url);
+		wp_die($res);
+	}
+	
+	/**
+	* purge URL
+	*/	
+	public static function purge_URL($url){
 		$url = apply_filters('nrpcp_url', $url);
 		$arr = wp_parse_url($url);
 		$url = $arr['scheme'] . '://' . $arr['host'] . '/' . self::$nrpcp_purge_path . '/' . $arr['path']; 
 		$res = self::curl_url($url);
-		wp_die($res);
+		return $res;
 	}
 	
 	/**
