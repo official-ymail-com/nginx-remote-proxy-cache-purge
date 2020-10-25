@@ -8,7 +8,7 @@ class nrpcp_class{
 	private static $initiated = false;
 	private static $nrpcp_secret = 'Nginx Remote Proxy Cache Purge Secrete';
 	private static $nrpcp_purge_path = 'purge';
-	private static $curl_format = 'curl -X PURGE %s --resolve %s:%d:%s -m 5';
+	private static $curl_format = 'curl -X PURGE %s --resolve %s:%d:%s -m 5 --insecure';
 	
 	/**
 	* Init
