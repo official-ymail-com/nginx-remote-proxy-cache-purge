@@ -163,12 +163,10 @@ class nrpcp_class{
 					$arr['port'] = 80;
 				}
 			}
-			echo $cmd = sprintf(self::$curl_format, $url, $arr['host'], $arr['port'], $proxy_server);
+			$cmd = sprintf(self::$curl_format, $url, $arr['host'], $arr['port'], $proxy_server);
 					
 			try {
 				exec($cmd, $result, $res);
-				var_dump($result);
-				var_dump($res);
 			} catch (Throwable $e) {
 				return;
 			}
