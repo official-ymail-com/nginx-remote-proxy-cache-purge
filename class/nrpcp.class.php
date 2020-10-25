@@ -8,6 +8,7 @@ class nrpcp_class{
 	private static $initiated = false;
 	private static $nrpcp_secret = 'Nginx Remote Proxy Cache Purge Secrete';
 	private static $nrpcp_purge_path = 'purge';
+	private static $curl_format = 'curl -X PURGE %s --resolve %s:%d:%s -m 5';
 	
 	/**
 	* Init
@@ -135,21 +136,40 @@ class nrpcp_class{
 	* curl URL
 	*/	
 	public static function curl_url($url){
-		$transport = new WP_Http_Curl();
-		$args = array(
-			'timeout' => '10', 
-			'redirection' => 1, 
-			'method' => 'HEAD',
-			'headers' => array(
-				'Cache-Control' => 'max-age=0',
-				'Sec-Fetch-User' => '?1',
-				'Accept-Encoding' => 'gzip, deflate, br',
-			)
-		);
-		$header = $transport->request( $url, $args );
+		$proxy_server = get_option('nrpcp-proxy-server');
 		$res = 0;
-		if( isset($header['response']['code']) && $header['response']['code'] == 200){
-			$res = 1;
+		if(!$proxy_server ){
+			$transport = new WP_Http_Curl();
+			$args = array(
+				'timeout' => '10', 
+				'redirection' => 1, 
+				'method' => 'HEAD',
+				'headers' => array(
+					'Cache-Control' => 'max-age=0',
+					'Sec-Fetch-User' => '?1',
+					'Accept-Encoding' => 'gzip, deflate, br',
+				)
+			);
+			$header = $transport->request( $url, $args );
+			if( isset($header['response']['code']) && $header['response']['code'] == 200){
+				$res = 1;
+			}
+		}else{
+			$siteurl = get_option('siteurl');
+			$arr = wp_parse_url($siteurl);
+			if(!isset($arr['port'])){
+				$arr['port'] = 443;
+				if($arr['scheme'] == 'http'){
+					$arr['port'] = 80;
+				}
+			}
+			$cmd = sprintf(self::$curl_format, $url, $arr['host'], $arr['port'], $proxy_server);
+					
+			try {
+				exec($cmd, $result, $res);
+			} catch (Throwable $e) {
+				return;
+			}
 		}
 		return $res;
 	}

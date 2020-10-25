@@ -66,7 +66,7 @@ class NRPCP_Admin_Class{
     public static function admin_init() {
 		register_setting( 'options_nrpcp', 'nrpcp-proxy-server', array(
 			'type' => 'string', 
-			'sanitize_callback' => 'sanitize_text_field',
+			'sanitize_callback' => 'rest_is_ip_address',
 			'default' => 1,
 		) );
         add_settings_section(
