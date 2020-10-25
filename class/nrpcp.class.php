@@ -115,7 +115,7 @@ class nrpcp_class{
 	public static function purge_URL($url){
 		$url = apply_filters('nrpcp_url', $url);
 		$arr = wp_parse_url($url);
-		$url = $arr['scheme'] . '://' . $arr['host'] . '/' . self::$nrpcp_purge_path . '/' . $arr['path']; 
+		$url = $arr['scheme'] . '://' . $arr['host'] . self::$nrpcp_purge_path . '/' . $arr['path']; 
 		$res = self::curl_url($url);
 		return $res;
 	}
